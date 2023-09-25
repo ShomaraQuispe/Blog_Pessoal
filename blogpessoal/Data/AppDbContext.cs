@@ -14,7 +14,7 @@ namespace blogpessoal.Data
 
         //Registra dbSet - Objeto responsavel por manipular a Tabela
 
-        public DbSet<Postagem> Postagens { get; set; } = null;
+        public DbSet<Postagem> Postagens { get; set; } = null!; //Exclamação força o nulo
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
