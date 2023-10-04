@@ -45,7 +45,7 @@ namespace blogpessoal.Service.Implements
             return Tema;
         }
 
-        public async Task<Tema> Create(Tema tema)
+        public async Task<Tema?> Create(Tema tema)
         {
             _context.Temas.Add(tema);
             await _context.SaveChangesAsync();

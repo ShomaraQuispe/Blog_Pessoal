@@ -1,11 +1,16 @@
 
 using blogpessoal.Data;
 using blogpessoal.Model;
+using blogpessoal.Security;
+using blogpessoal.Security.Implements;
 using blogpessoal.Service;
 using blogpessoal.Service.Implements;
 using blogpessoal.Validator;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace blogpessoal
 {
@@ -21,6 +26,7 @@ namespace blogpessoal
             builder.Services.AddControllers()
                 .AddNewtonsoftJson(options =>
                 {
+                    options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;//ignora objetos nulos
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                 }
             );
@@ -38,10 +44,34 @@ namespace blogpessoal
 
             builder.Services.AddTransient<IValidator<Postagem>, PostagemValidator>();
             builder.Services.AddTransient<IValidator<Tema>, TemaValidator>();
+            builder.Services.AddTransient<IValidator<User>, UserValidator>();
 
             //Registrar as classes de serviços (service) - é do escopo, fica instanciada na memoria até encerrar o serviço
             builder.Services.AddScoped<IPostagemService, PostagemService>();
             builder.Services.AddScoped<ITemaService, TemaService>();
+            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
+
+            // Adicionar a Validação do Token
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                var Key = Encoding.UTF8.GetBytes(Setting.Secret);
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Key)
+
+                };
+            });
+
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -50,19 +80,18 @@ namespace blogpessoal
             //Configuração do CORS
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy(name: "MyPplicy",
+                options.AddPolicy(name: "MyPolicy",
                     policy =>
                     {
                         policy.AllowAnyOrigin()
                         .AllowAnyMethod()
                         .AllowAnyHeader();
-                    });               
-            }
-            );
+                    });
+            });
 
             var app = builder.Build();
 
-            //Criar o Bando de dados e as tabela
+            //Criar o Banco de dados e as tabela
 
             using (var scope = app.Services.CreateAsyncScope())
             {
@@ -71,18 +100,19 @@ namespace blogpessoal
             }
 
 
-                // Configure the HTTP request pipeline.
-                if (app.Environment.IsDevelopment())
-                {
-                    app.UseSwagger();
-                    app.UseSwaggerUI();
-                }
+            // Configure the HTTP request pipeline.
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
 
             //Inicializa o CORS
             app.UseCors("MyPolicy");
-
+            // Habilitar a Autenticação e a Autorização
             app.UseAuthorization();
 
+            // Habilitar Controller
             app.MapControllers();
 
             app.Run();

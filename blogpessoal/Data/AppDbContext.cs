@@ -5,17 +5,24 @@ namespace blogpessoal.Data
 {
     public class AppDbContext : DbContext
     {
-        public AppDbContext (DbContextOptions<AppDbContext> options) : base(options) { }
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {      
-                modelBuilder.Entity<Postagem>().ToTable("tb_postagens");
+        {
+            modelBuilder.Entity<Postagem>().ToTable("tb_postagens");
             modelBuilder.Entity<Tema>().ToTable("tb_temas");
+            modelBuilder.Entity<Tema>().ToTable("tb_usuarios");
 
-             _ = modelBuilder.Entity<Postagem>()
+            _ = modelBuilder.Entity<Postagem>()
           .HasOne(_ => _.Tema)
           .WithMany(t => t.Postagem)
           .HasForeignKey("TemaId")
+          .OnDelete(DeleteBehavior.Cascade);
+
+            _ = modelBuilder.Entity<Postagem>()
+          .HasOne(_ => _.Usuario)
+          .WithMany(t => t.Postagem)
+          .HasForeignKey("UsuarioId")
           .OnDelete(DeleteBehavior.Cascade);
         }
 
@@ -23,6 +30,7 @@ namespace blogpessoal.Data
 
         public DbSet<Postagem> Postagens { get; set; } = null!; //Exclamação força o nulo
         public DbSet<Tema> Temas { get; set; } = null!;
+        public DbSet<User> Users { get; set; } = null!;
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {

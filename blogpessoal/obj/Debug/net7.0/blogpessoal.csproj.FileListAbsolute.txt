@@ -160,3 +160,5 @@ C:\Users\shoma\OneDrive\Área de Trabalho\Projeto-BlogPessoal\blogpessoal\obj\De
 C:\Users\shoma\OneDrive\Área de Trabalho\Projeto-BlogPessoal\blogpessoal\obj\Debug\net7.0\blogpessoal.pdb
 C:\Users\shoma\OneDrive\Área de Trabalho\Projeto-BlogPessoal\blogpessoal\obj\Debug\net7.0\blogpessoal.genruntimeconfig.cache
 C:\Users\shoma\OneDrive\Área de Trabalho\Projeto-BlogPessoal\blogpessoal\obj\Debug\net7.0\ref\blogpessoal.dll
+C:\Users\shoma\OneDrive\Área de Trabalho\Projeto-BlogPessoal\blogpessoal\bin\Debug\net7.0\BCrypt.Net-Core.dll
+C:\Users\shoma\OneDrive\Área de Trabalho\Projeto-BlogPessoal\blogpessoal\bin\Debug\net7.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
