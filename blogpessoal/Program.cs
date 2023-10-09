@@ -11,7 +11,6 @@ using FluentValidation;
 using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -164,7 +163,7 @@ namespace blogpessoal
             // Configure the HTTP request pipeline.
 
             app.UseSwagger();
-            app.UseSwaggerUI();
+            //app.UseSwaggerUI();
 
             // Swagger como Página Inicial (Home) na Nuvem
             if (app.Environment.IsProduction())
