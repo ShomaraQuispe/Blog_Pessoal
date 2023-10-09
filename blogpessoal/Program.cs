@@ -14,6 +14,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using Microsoft.Extensions.Options;
+
 
 namespace blogpessoal
 {
@@ -163,7 +165,7 @@ namespace blogpessoal
             // Configure the HTTP request pipeline.
 
             app.UseSwagger();
-            //app.UseSwaggerUI();
+            app.UseSwaggerUI();
 
             // Swagger como Página Inicial (Home) na Nuvem
             if (app.Environment.IsProduction())
